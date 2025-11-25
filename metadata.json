@@ -1,0 +1,7 @@
+{
+  "name": "V600- DEEMofFINALof StoryWeaver AI",
+  "description": "A bilingual educational story creator for schools using Gemini AI.",
+  "requestFramePermissions": [
+    "microphone"
+  ]
+}
