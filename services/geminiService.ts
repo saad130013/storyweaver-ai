@@ -2,7 +2,17 @@
 import { GoogleGenAI, Type, Schema } from "@google/genai";
 import { Scene } from "../types";
 
-const ai = new GoogleGenAI({ apiKey: process.env.API_KEY });
+const getAI = (): GoogleGenAI => {
+  const apiKey = process.env.API_KEY;
+
+  if (!apiKey) {
+    throw new Error(
+      "Gemini is not configured yet. Manual story creation and export are still available."
+    );
+  }
+
+  return new GoogleGenAI({ apiKey });
+};
 
 // Strict Schema for a single scene
 const singleSceneSchema: Schema = {
@@ -79,7 +89,7 @@ export const generateSingleScene = async (
   `;
 
   try {
-    const response = await ai.models.generateContent({
+    const response = await getAI().models.generateContent({
       model: "gemini-2.5-flash",
       contents: [
         { role: "user", parts: [imagePart, { text: prompt }] }
@@ -177,7 +187,7 @@ export const refineText = async (
   `;
 
   try {
-    const response = await ai.models.generateContent({
+    const response = await getAI().models.generateContent({
       model: "gemini-2.5-flash",
       contents: [{ role: "user", parts: [{ text: prompt }] }],
       config: {
@@ -209,7 +219,7 @@ export const translateText = async (text: string): Promise<string> => {
   `;
 
   try {
-    const response = await ai.models.generateContent({
+    const response = await getAI().models.generateContent({
       model: "gemini-2.5-flash",
       contents: [{ role: "user", parts: [{ text: prompt }] }],
       config: { temperature: 0.3 },
